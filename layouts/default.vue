@@ -5,6 +5,8 @@
 </template>
 
 <style lang="scss">
+@import '../assets/css/colors.scss';
+
 @font-face {
   font-family: "PT Sans";
   font-style: normal;

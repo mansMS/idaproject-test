@@ -1,5 +1,5 @@
 <template>
-  <div :class="$style.productList">
+  <div :class="s.productList">
     <Card
       v-for="product in sortingProducts"
       :key="product.id"
@@ -64,7 +64,7 @@ export default {
 }
 </script>
 
-<style lang="scss" module>
+<style lang="scss" module="s">
 .productList {
   display: grid;
   grid-template-columns: repeat(4, 1fr);

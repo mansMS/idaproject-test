@@ -1,7 +1,7 @@
 <template>
-  <nav :class="$style.catalogNav">
-    <li v-for="catalogUnit in catalog" :key="catalogUnit.id" :class="$style.catalogNav__item">
-      <NuxtLink :to="`/${catalogUnit.id}`" :class="$style.catalogNav__link">{{ catalogUnit.name }}</NuxtLink>
+  <nav :class="s.catalogNav">
+    <li v-for="catalogUnit in catalog" :key="catalogUnit.id" :class="s.catalogNav__item">
+      <NuxtLink :to="`/${catalogUnit.id}`" :class="s.catalogNav__link">{{ catalogUnit.name }}</NuxtLink>
     </li>
   </nav>
 </template>
@@ -17,7 +17,9 @@ export default {
 }
 </script>
 
-<style lang="scss" module>
+<style lang="scss" module="s">
+@import '@/assets/css/colors';
+
 .catalogNav {
   list-style: none;
 

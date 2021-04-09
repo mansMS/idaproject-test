@@ -1,3 +1,5 @@
+@import './colors';
+
 .pointer {
   cursor: url("@/assets/images/cursor.svg") 10 5, auto;
 }
@@ -6,8 +8,8 @@
   width: 100%;
   padding: 0.875rem;
   font-family: "PT Sans";
-  color: #fff;
-  background-color: #1f1f1f;
+  color: $white;
+  background-color: $black;
   border-radius: 8px;
   outline: none;
 }
@@ -20,7 +22,7 @@
   height: 2rem;
   width: 2rem;
   border: none;
-  background: center / contain no-repeat url("@/assets/images/basket.svg"), #fff;
+  background: center / contain no-repeat url("@/assets/images/basket.svg"), $white;
   outline: none;
 }
 
@@ -35,7 +37,7 @@
   min-width: 0.75rem;
   border-radius: 50%;
   font-size: 0.5rem;
-  color: #ffffff;
+  color: $white;
   background-color: #959dad;
 }
 
@@ -53,36 +55,4 @@
   border: none;
   background: center / auto no-repeat url("@/assets/images/can.svg");
   outline: none;
-}
-
-.rating {
-  display: flex;
-  align-items: center;
-}
-
-.rating__value {
-  font-size: 0.625rem;
-  line-height: 1.3;
-  font-weight: bold;
-  color: #f2c94c;
-}
-
-.star {
-  display: flex;
-  align-items: flex-end;
-  width: 20px;
-  height: 20px;
-  text-align: center;
-  background-image: url("@/assets/images/star.svg");
-  background-repeat: no-repeat;
-  background-position: center;
-}
-
-.star__fill {
-  display: inline-block;
-  width: 100%;
-  height: 100%;
-  background-image: url("@/assets/images/fill.svg");
-  background-repeat: no-repeat;
-  background-position: bottom;
 }

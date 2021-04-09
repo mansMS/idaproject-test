@@ -1,42 +1,38 @@
 <template>
   <transition name="modal">
-    <div :class="$style.modalMask">
-      <div :class="$style.basket">
-        <button :class="[common.buttonClose, $style.basket__close]" @click="$emit('close')" />
-        <h2 :class="$style.basket__title">Корзина</h2>
-        <div v-if="!products || !products.length" :class="$style.empty">
-          <p :class="$style.empty__text">Пока что вы ничего не добавили в корзину.</p>
-          <button :class="common.buttonMain" @click="$emit('close')">Перейти к выбору</button>
+    <div :class="s.modalMask">
+      <div :class="s.basket">
+        <button :class="[c.buttonClose, s.basket__close]" @click="$emit('close')" />
+        <h2 :class="s.basket__title">Корзина</h2>
+        <div v-if="!products || !products.length" :class="s.empty">
+          <p :class="s.empty__text">Пока что вы ничего не добавили в корзину.</p>
+          <button :class="c.buttonMain" @click="$emit('close')">Перейти к выбору</button>
         </div>
         <div v-else>
-          <div :class="$style.products">
-            <p :class="$style.products__title">Товары в корзине</p>
-            <div v-for="(product, index) in products" :key="product.id+index" :class="$style.product">
+          <div :class="s.products">
+            <p :class="s.products__title">Товары в корзине</p>
+            <div v-for="(product, index) in products" :key="product.id+index" :class="s.product">
               <img
                 :src="`${$axios.defaults.baseURL + product.photo}`"
                 :alt="product.name"
-                :class="$style.product__image">
-              <div :class="$style.product__description">
+                :class="s.product__image">
+              <div :class="s.product__description">
                 <div>
-                  <div :class="$style.product__name">{{ product.name }}</div>
-                  <div :class="$style.product__price">{{ priceFormatter(product.price) }}</div>
+                  <div :class="s.product__name">{{ product.name }}</div>
+                  <div :class="s.product__price">{{ priceFormatter(product.price) }}</div>
                 </div>
-                <div :class="[$style.product__rating, common.rating]">
-                  <span :class="[$style.rating__star, common.star]">
-                    <span :class="common.star__fill" :style="`height: ${product.rating*9.4+25}%`" />
-                  </span>
-                </div>
+                <Raiting v-if="'rating' in product" :class="s.product__rating" :rating="product.rating" />
               </div>
-              <button :class="[common.buttonDelete, $style.product__delete]" @click="removeProduct(product.id)" />
+              <button :class="[c.buttonDelete, s.product__delete]" @click="removeProduct(product.id)" />
             </div>
           </div>
-          <div :class="$style.formBlock">
-            <p :class="$style.formBlock__title">Оформить заказ</p>
+          <div :class="s.formBlock">
+            <p :class="s.formBlock__title">Оформить заказ</p>
             <form id="app" action="/" method="post" @submit="checkForm">
               <p><input id="name" v-model="name" type="text" name="name" placeholder="Ваше имя"></p>
               <p><input id="phone" v-model="phone" type="text" name="phone" placeholder="Телефон"></p>
               <p><input id="address" v-model="address" type="text" name="address" placeholder="Адрес"></p>
-              <input :class="[common.buttonMain, $style.form__button]" type="submit" value="Отправить" :disabled="disableSubmit">
+              <input :class="[c.buttonMain, s.form__button]" type="submit" value="Отправить" :disabled="disableSubmit">
             </form>
           </div>
         </div>
@@ -62,7 +58,7 @@ export default {
     ...mapGetters({
       products: 'basketProducts'
     }),
-    common() {
+    c() {
       return common
     }
   },
@@ -90,7 +86,9 @@ export default {
 }
 </script>
 
-<style lang="scss" module>
+<style lang="scss" module="s">
+@import '@/assets/css/colors';
+
 .modalMask {
   position: fixed;
   z-index: 100;
@@ -98,7 +96,7 @@ export default {
   right: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(255, 255, 255, 0.5);
+  background-color: $transparent-white;
 }
 
 .basket {
@@ -107,7 +105,7 @@ export default {
   max-width: 30rem;
   margin-left: auto;
   padding: 3.25rem 3rem;
-  background-color: #fff;
+  background-color: $white;
   border-radius: 0.5rem 0 0 0.5rem;
   box-shadow: -0.25rem 0px 1rem rgba(0, 0, 0, 0.05);
   overflow: auto;
@@ -151,11 +149,12 @@ export default {
   border-radius: 8px;
 
   &__image {
-    max-height: 90px;
+    width: 5.625rem;
+    max-height: 5.625rem;
   }
 
   &__description {
-    height: 100%;
+    align-self: stretch;
     width: 10.625rem;
     display: flex;
     flex-direction: column;
@@ -166,6 +165,7 @@ export default {
 
   &__name {
     color: #59606d;
+    margin-bottom: 0.375rem;
   }
 
   &__price {
@@ -189,7 +189,7 @@ export default {
     border: none;
     outline: none;
     color: #1F1F1F;
-    background-color: #F8F8F8;
+    background-color: $dark-white;
     border-radius: 8px;
     font-size: 1rem;
     line-height: 1.3125;

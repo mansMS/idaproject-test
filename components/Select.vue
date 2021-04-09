@@ -1,14 +1,14 @@
 <template>
-  <div :tabindex="tabindex" :class="$style.select" @blur="close">
-    <div :class="[$style.select__selected, $style.selected, common.pointer]" @click="open">
-      <span :class="$style.selected__text">{{ selected ? selected.text : 'Нет элементов' }}</span>
-      <span :class="$style.selected__arrow" />
+  <div :tabindex="tabindex" :class="s.select" @blur="close">
+    <div :class="[s.select__selected, s.selected, c.pointer]" @click="open">
+      <span :class="s.selected__text">{{ selected ? selected.text : 'Нет элементов' }}</span>
+      <span :class="s.selected__arrow" />
     </div>
-    <div v-if="options && options.length" :class="[$style.select__itemList, isOpen && $style.open]">
+    <div v-if="options && options.length" :class="[s.select__itemList, isOpen && s.open]">
       <div
         v-for="option of options"
         :key="option.key"
-        :class="[$style.select__item, common.pointer]"
+        :class="[s.select__item, c.pointer]"
         @click="select(option)">По {{ option.text }}</div>
     </div>
   </div>
@@ -40,7 +40,7 @@ export default {
     hasOptions() {
       return this.options && this.options.length > 0
     },
-    common() {
+    c() {
       return common
     }
   },
@@ -67,7 +67,9 @@ export default {
 }
 </script>
 
-<style lang="scss" module>
+<style lang="scss" module="s">
+@import '@/assets/css/colors';
+
 .select {
   position: relative;
   outline: none;
@@ -83,7 +85,7 @@ export default {
   &__itemList {
     color: #959dad;
     border-radius: 0.5rem;
-    background-color: #ffffff;
+    background-color: $white;
     box-shadow: 0px 0.25rem 1rem rgba(0, 0, 0, 0.05);
     padding: 0.5rem 0;
     position: absolute;
@@ -102,7 +104,7 @@ export default {
 
     &:hover {
       color: #1f1f1f;
-      background-color: #f8f8f8;
+      background-color: $dark-white;
     }
   }
 }

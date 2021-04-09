@@ -1,21 +1,16 @@
 <template>
-  <div :class="$style.product">
-    <div v-if="'rating' in product" :class="[$style.product__rating, common.rating]">
-      <span :class="[$style.rating__star, common.star]">
-        <span :class="common.star__fill" :style="`height: ${product.rating*9.4+25}%`" />
-      </span>
-      <span :class="common.rating__value">{{ product.rating }}</span>
-    </div>
+  <div :class="s.product">
+    <Raiting v-if="'rating' in product" :class="s.product__rating" :rating="product.rating" />
     <img
       :src="`${$axios.defaults.baseURL + product.photo}`"
       :alt="product.name"
-      :class="$style.product__image">
-    <button :class="[common.basketButton, $style.product__basket, product.inBasket && $style.product__basket_active]" @click="addProduct(product.id)">
-      <!-- <span v-if="basket.length" :class="common.basketButton__label" /> -->
+      :class="s.product__image">
+    <button :class="[c.basketButton, s.product__basket, product.inBasket && s.product__basket_active]" @click="addProduct(product.id)">
+      <!-- <span v-if="basket.length" :class="c.basketButton__label" /> -->
     </button>
-    <div :class="$style.product__text">
-      <div :class="$style.product__name">{{ product.name }}</div>
-      <div :class="$style.product__price">{{ priceFormatter(product.price) }}</div>
+    <div :class="s.product__text">
+      <div :class="s.product__name">{{ product.name }}</div>
+      <div :class="s.product__price">{{ priceFormatter(product.price) }}</div>
     </div>
   </div>
 </template>
@@ -31,7 +26,7 @@ export default {
     }
   },
   computed: {
-    common() {
+    c() {
       return common
     }
   },
@@ -50,7 +45,9 @@ export default {
 }
 </script>
 
-<style lang="scss" module>
+<style lang="scss" module="s">
+@import '@/assets/css/colors';
+
 .product {
   position: relative;
   display: flex;
@@ -59,7 +56,7 @@ export default {
   max-width: 14.5rem;
   height: 15rem;
   padding: 1rem;
-  background-color: #fff;
+  background-color: $white;
   box-shadow: 0px 4px 16px rgba(0, 0, 0, 0.05);
   border-radius: 8px;
 

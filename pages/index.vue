@@ -1,17 +1,17 @@
 <template>
-  <div :class="$style.page">
-    <header :class="$style.header">
-      <div :class="$style.header_container">
-        <h1 :class="$style.hader__title">TestList</h1>
-        <button :class="[common.basketButton, $style.basketButton]" @click="showBasket = true">
-          <span v-if="basket.length" :class="common.basketButton__label">{{ basket.length }}</span>
+  <div :class="s.page">
+    <header :class="s.header">
+      <div :class="s.header_container">
+        <h1 :class="s.hader__title">TestList</h1>
+        <button :class="[c.basketButton, s.basketButton]" @click="showBasket = true">
+          <span v-if="basket.length" :class="c.basketButton__label">{{ basket.length }}</span>
         </button>
       </div>
     </header>
-    <main :class="$style.catalog">
-      <h2 :class="$style.pageTitle">Каталог</h2>
-      <div :class="$style.sortingBlock">
-        <label for="sorting_select" :class="$style.sortingItem">
+    <main :class="s.catalog">
+      <h2 :class="s.pageTitle">Каталог</h2>
+      <div :class="s.sortingBlock">
+        <label for="sorting_select" :class="s.sortingItem">
           Сортировать по:
           <Select v-model="activeSorting" :options="sortingList" />
         </label>
@@ -49,14 +49,16 @@ export default {
   },
   computed: {
     ...mapState(['catalog', 'products', 'basket']),
-    common() {
+    c() {
       return common
     }
   }
 }
 </script>
 
-<style lang="scss" module>
+<style lang="scss" module="s">
+@import '@/assets/css/colors';
+
 .page {
   max-height: 100vh;
   margin: 0 auto;
@@ -64,7 +66,7 @@ export default {
 }
 
 .header {
-  color: #59606d;
+  color: $grey;
   box-shadow: 0px 4px 16px rgba(0, 0, 0, 0.05);
   border-radius: 0px 0px 8px 8px;
 
