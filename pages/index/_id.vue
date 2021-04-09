@@ -1,11 +1,10 @@
 <template>
-  <div class="product-list">
+  <div :class="$style.productList">
     <Card
       v-for="product in sortingProducts"
       :key="product.id"
       :product="product"
-      @click="fetchProducts"
-    />
+      @click="fetchProducts" />
   </div>
 </template>
 
@@ -65,14 +64,22 @@ export default {
 }
 </script>
 
-<style lang="scss" scoped>
-.product-list {
+<style lang="scss" module>
+.productList {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   grid-gap: 1rem;
 
-  @media (max-width: 85rem) {
+  @media (max-width: 82.5rem) {
     grid-template-columns: repeat(3, 1fr);
+  }
+
+  @media (max-width: 65.375rem) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  @media (max-width: 33.625rem) {
+    grid-template-columns: 1fr;
   }
 }
 </style>

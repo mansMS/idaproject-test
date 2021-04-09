@@ -1,33 +1,43 @@
 <template>
   <transition name="modal">
-    <div class="modal-mask">
-      <div class="basket">
-        <button class="button-close basket__close" @click="$emit('close')" />
-        <h2 class="basket__title">Корзина</h2>
-        <div v-if="!products || !products.length" class="empty">
-          <p class="empty__text">Пока что вы ничего не добавили в корзину.</p>
-          <button class="button-main" @click="$emit('close')">Перейти к выбору</button>
+    <div :class="$style.modalMask">
+      <div :class="$style.basket">
+        <button :class="[common.buttonClose, $style.basket__close]" @click="$emit('close')" />
+        <h2 :class="$style.basket__title">Корзина</h2>
+        <div v-if="!products || !products.length" :class="$style.empty">
+          <p :class="$style.empty__text">Пока что вы ничего не добавили в корзину.</p>
+          <button :class="common.buttonMain" @click="$emit('close')">Перейти к выбору</button>
         </div>
-        <div v-else class="products">
-          <p class="products__title">Товары в корзине</p>
-          <div v-for="(product, index) in products" :key="product.id+index" class="product">
-            <img
-              :src="`${$axios.defaults.baseURL + product.photo}`"
-              :alt="product.name"
-              class="product__image"
-            />
-            <div class="product__description">
-              <div>
-                <div class="product__name">{{ product.name }}</div>
-                <div class="product__price">{{ priceFormatter(product.price) }}</div>
+        <div v-else>
+          <div :class="$style.products">
+            <p :class="$style.products__title">Товары в корзине</p>
+            <div v-for="(product, index) in products" :key="product.id+index" :class="$style.product">
+              <img
+                :src="`${$axios.defaults.baseURL + product.photo}`"
+                :alt="product.name"
+                :class="$style.product__image">
+              <div :class="$style.product__description">
+                <div>
+                  <div :class="$style.product__name">{{ product.name }}</div>
+                  <div :class="$style.product__price">{{ priceFormatter(product.price) }}</div>
+                </div>
+                <div :class="[$style.product__rating, common.rating]">
+                  <span :class="[$style.rating__star, common.star]">
+                    <span :class="common.star__fill" :style="`height: ${product.rating*9.4+25}%`" />
+                  </span>
+                </div>
               </div>
-              <div class="product__rating rating">
-                <span class="rating__star star">
-                  <span class="star__fill" :style="`height: ${product.rating*10+10}%`" />
-                </span>
-              </div>
+              <button :class="[common.buttonDelete, $style.product__delete]" @click="removeProduct(product.id)" />
             </div>
-            <button class="button-delete product__delete" @click="removeProduct(product.id)" />
+          </div>
+          <div :class="$style.formBlock">
+            <p :class="$style.formBlock__title">Оформить заказ</p>
+            <form id="app" action="/" method="post" @submit="checkForm">
+              <p><input id="name" v-model="name" type="text" name="name" placeholder="Ваше имя"></p>
+              <p><input id="phone" v-model="phone" type="text" name="phone" placeholder="Телефон"></p>
+              <p><input id="address" v-model="address" type="text" name="address" placeholder="Адрес"></p>
+              <input :class="[common.buttonMain, $style.form__button]" type="submit" value="Отправить" :disabled="disableSubmit">
+            </form>
           </div>
         </div>
       </div>
@@ -37,12 +47,24 @@
 
 <script>
 import { mapGetters } from 'vuex'
+import common from '../assets/css/main.scss?module'
 
 export default {
+  data() {
+    return {
+      disableSubmit: false,
+      name: '',
+      phone: '',
+      address: ''
+    }
+  },
   computed: {
     ...mapGetters({
-      products: 'busketProducts'
-    })
+      products: 'basketProducts'
+    }),
+    common() {
+      return common
+    }
   },
   methods: {
     removeProduct(id) {
@@ -54,13 +76,22 @@ export default {
         currency: 'RUB',
         minimumFractionDigits: 0
       }).format(value)
+    },
+    checkForm(e) {
+      if (this.name && this.phone && this.address) {
+        this.errdisableSubmitor = false
+        return true
+      } else {
+        this.disableSubmit = true
+        e.preventDefault()
+      }
     }
   }
 }
 </script>
 
-<style lang="scss" scoped>
-.modal-mask {
+<style lang="scss" module>
+.modalMask {
   position: fixed;
   z-index: 100;
   top: 0;
@@ -73,23 +104,24 @@ export default {
 .basket {
   box-sizing: border-box;
   height: 100%;
-  width: 28.75rem;
+  max-width: 30rem;
   margin-left: auto;
   padding: 3.25rem 3rem;
   background-color: #fff;
   border-radius: 0.5rem 0 0 0.5rem;
   box-shadow: -0.25rem 0px 1rem rgba(0, 0, 0, 0.05);
-}
+  overflow: auto;
 
-.basket__close {
-  position: relative;
-  float: right;
-  top: 0.5rem;
-}
+  &__close {
+    position: relative;
+    float: right;
+    top: 0.5rem;
+  }
 
-.basket__title {
-  font-size: 2rem;
-  line-height: 1.25;
+  &__title {
+    font-size: 2rem;
+    line-height: 1.25;
+  }
 }
 
 .empty__text {
@@ -99,13 +131,14 @@ export default {
 }
 
 .products {
-}
+  padding: 0.5rem 0;
 
-.products__title {
-  margin: 1.5rem 0 1rem;
-  font-size: 1.125rem;
-  line-height: 1.5rem;
-  color: #59606d;
+  &__title {
+    margin: 1rem 0;
+    font-size: 1.125rem;
+    line-height: 1.5rem;
+    color: #59606d;
+  }
 }
 
 .product {
@@ -116,31 +149,69 @@ export default {
   padding: 1rem;
   box-shadow: 0px 4px 16px rgba(0, 0, 0, 0.05);
   border-radius: 8px;
+
+  &__image {
+    max-height: 90px;
+  }
+
+  &__description {
+    height: 100%;
+    width: 10.625rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    font-size: 0.875rem;
+    line-height: 1.125rem;
+  }
+
+  &__name {
+    color: #59606d;
+  }
+
+  &__price {
+    font-weight: bold;
+    color: #1f1f1f;
+  }
 }
 
-.product__image {
-  max-height: 90px;
+.formBlock {
+  &__title {
+    margin: 1rem 0;
+    font-size: 1.125rem;
+    line-height: 1.5rem;
+    color: #59606d;
+  }
+
+  input:not([type="submit"]) {
+    width: 100%;
+    margin-bottom: 1rem;
+    padding: 0.875rem;
+    border: none;
+    outline: none;
+    color: #1F1F1F;
+    background-color: #F8F8F8;
+    border-radius: 8px;
+    font-size: 1rem;
+    line-height: 1.3125;
+  }
 }
 
-.product__description {
-  height: 100%;
-  width: 10.625rem;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  font-size: 0.875rem;
-  line-height: 1.125rem;
+.form__button {
+  margin: 0.5rem 0;
 }
 
-.product__name {
-  color: #59606d;
-}
+@media (max-width: 28.75rem) {
+  .basket {
+    padding: 1rem;
+  }
 
-.product__price {
-  font-weight: bold;
-  color: #1f1f1f;
+  .product {
+    padding: 0.4rem;
+  }
 }
+</style>
 
+<style>
 .modal-enter,
 .modal-leave-to {
   right: -100%;

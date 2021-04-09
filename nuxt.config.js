@@ -48,5 +48,10 @@ export default {
         }
       }
     }
+  },
+
+  router: {
+    linkActiveClass: 'nuxtLinkActive',
+    linkExactActiveClass: 'exactLinkActive'
   }
 }

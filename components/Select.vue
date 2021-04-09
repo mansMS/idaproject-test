@@ -1,21 +1,22 @@
 <template>
-  <div :tabindex="tabindex" class="select" @blur="close">
-    <div class="select__selected selected" @click="open">
-      <span class="selected__text">{{ selected ? selected.text : 'Нет элементов' }}</span>
-      <span class="selected__arrow" />
+  <div :tabindex="tabindex" :class="$style.select" @blur="close">
+    <div :class="[$style.select__selected, $style.selected, common.pointer]" @click="open">
+      <span :class="$style.selected__text">{{ selected ? selected.text : 'Нет элементов' }}</span>
+      <span :class="$style.selected__arrow" />
     </div>
-    <div v-if="options && options.length" class="select__item-list" :class="{ open: isOpen }">
+    <div v-if="options && options.length" :class="[$style.select__itemList, isOpen && $style.open]">
       <div
         v-for="option of options"
         :key="option.key"
-        class="select__item"
-        @click="select(option)"
-      >По {{ option.text }}</div>
+        :class="[$style.select__item, common.pointer]"
+        @click="select(option)">По {{ option.text }}</div>
     </div>
   </div>
 </template>
 
 <script>
+import common from '../assets/css/main.scss?module'
+
 export default {
   props: {
     options: {
@@ -38,6 +39,9 @@ export default {
   computed: {
     hasOptions() {
       return this.options && this.options.length > 0
+    },
+    common() {
+      return common
     }
   },
   mounted() {
@@ -63,20 +67,20 @@ export default {
 }
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss" module>
 .select {
   position: relative;
   outline: none;
 
   &__selected {
     width: 8rem;
-    padding: 0 0.8125rem 0 0.375rem;
+    padding-left: 0.375rem;
     color: #59606d;
     overflow: hidden;
     text-overflow: ellipsis;
   }
 
-  &__item-list {
+  &__itemList {
     color: #959dad;
     border-radius: 0.5rem;
     background-color: #ffffff;
@@ -95,7 +99,6 @@ export default {
     font-size: 0.875rem;
     line-height: 1.125rem;
     word-wrap: break-word;
-    cursor: url("@/assets/images/cursor.svg") 10 5, auto;
 
     &:hover {
       color: #1f1f1f;
@@ -105,8 +108,6 @@ export default {
 }
 
 .selected {
-  cursor: url("@/assets/images/cursor.svg") 10 5, auto;
-
   &__arrow {
     display: inline-block;
     width: 0.3125rem;

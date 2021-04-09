@@ -26,11 +26,13 @@ export const mutations = {
     } else {
       state.basket.splice(state.basket.indexOf(id), 0, id)
     }
-    localStorage.busket = JSON.stringify(state.basket)
+    localStorage.basket = JSON.stringify(state.basket)
+    // document.cookie = 'basket=' + JSON.stringify(state.basket)
   },
   removeFromBasket(state, id) {
     state.basket.splice(state.basket.indexOf(id), 1)
-    localStorage.busket = JSON.stringify(state.basket)
+    localStorage.basket = JSON.stringify(state.basket)
+    // document.cookie = 'basket=' + JSON.stringify(state.basket)
   }
 }
 
@@ -53,7 +55,7 @@ export const actions = {
 }
 
 export const getters = {
-  busketProducts: (state) => {
-    return state.basket.map(id => state.products[state.activeCatalog].find(product => product.id === id)).filter(Boolean)
+  basketProducts: (state) => {
+    return state.basket.map(id => Object.values(state.products).flat().find(product => product.id === id)).filter(Boolean)
   }
 }

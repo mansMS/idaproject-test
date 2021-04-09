@@ -1,32 +1,38 @@
 <template>
-  <div class="product">
-    <div v-if="'rating' in product" class="product__rating rating">
-      <span class="rating__star star">
-        <span class="star__fill" :style="`height: ${product.rating*10+10}%`" />
+  <div :class="$style.product">
+    <div v-if="'rating' in product" :class="[$style.product__rating, common.rating]">
+      <span :class="[$style.rating__star, common.star]">
+        <span :class="common.star__fill" :style="`height: ${product.rating*9.4+25}%`" />
       </span>
-      <span class="rating__value">{{ product.rating }}</span>
+      <span :class="common.rating__value">{{ product.rating }}</span>
     </div>
     <img
       :src="`${$axios.defaults.baseURL + product.photo}`"
       :alt="product.name"
-      class="product__image"
-    />
-    <button class="basket-buttun product__basket" @click="addProduct(product.id)">
-      <!-- <span v-if="basket.length" class="basket-buttun__label" /> -->
+      :class="$style.product__image">
+    <button :class="[common.basketButton, $style.product__basket, product.inBasket && $style.product__basket_active]" @click="addProduct(product.id)">
+      <!-- <span v-if="basket.length" :class="common.basketButton__label" /> -->
     </button>
-    <div class="product__text">
-      <div class="product__name">{{ product.name }}</div>
-      <div class="product__price">{{ priceFormatter(product.price) }}</div>
+    <div :class="$style.product__text">
+      <div :class="$style.product__name">{{ product.name }}</div>
+      <div :class="$style.product__price">{{ priceFormatter(product.price) }}</div>
     </div>
   </div>
 </template>
 
 <script>
+import common from '../assets/css/main.scss?module'
+
 export default {
   props: {
     product: {
       type: Object,
       required: true
+    }
+  },
+  computed: {
+    common() {
+      return common
     }
   },
   methods: {
@@ -44,13 +50,13 @@ export default {
 }
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss" module>
 .product {
   position: relative;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  width: 14.5rem;
+  max-width: 14.5rem;
   height: 15rem;
   padding: 1rem;
   background-color: #fff;
@@ -72,6 +78,11 @@ export default {
     right: 1rem;
     height: 1rem;
     width: 1rem;
+    opacity: 0.5;
+
+    &_active {
+      opacity: 1;
+    }
   }
 
   &__text {
