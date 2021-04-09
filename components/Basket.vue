@@ -42,7 +42,7 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
+import { mapState } from 'vuex'
 import common from '../assets/css/main.scss?module'
 
 export default {
@@ -55,9 +55,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters({
-      products: 'basketProducts'
-    }),
+    ...mapState({ products: 'basket' }),
     c() {
       return common
     }
