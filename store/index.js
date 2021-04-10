@@ -19,20 +19,19 @@ export const mutations = {
   setBasket(state, basket) {
     state.basket = basket
   },
-  addToBasket(state, id) {
-    const index = state.basket.indexOf(id)
+  addToBasket(state, product) {
+    const index = state.basket.findIndex(({ id }) => id === product.id)
     if (index === -1) {
-      state.basket.push(id)
+      state.basket.push(product)
     } else {
-      state.basket.splice(state.basket.indexOf(id), 0, id)
+      state.basket.splice(index, 0, product)
     }
     localStorage.basket = JSON.stringify(state.basket)
-    // document.cookie = 'basket=' + JSON.stringify(state.basket)
   },
   removeFromBasket(state, id) {
-    state.basket.splice(state.basket.indexOf(id), 1)
+    const index = state.basket.findIndex(product => product.id === id)
+    state.basket.splice(index, 1)
     localStorage.basket = JSON.stringify(state.basket)
-    // document.cookie = 'basket=' + JSON.stringify(state.basket)
   }
 }
 
@@ -55,7 +54,7 @@ export const actions = {
 }
 
 export const getters = {
-  basketProducts: (state) => {
-    return state.basket.map(id => Object.values(state.products).flat().find(product => product.id === id)).filter(Boolean)
+  basketIds: ({ basket }) => {
+    return basket.map(({ id }) => id)
   }
 }

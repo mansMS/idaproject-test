@@ -4,7 +4,7 @@
       <div :class="s.header_container">
         <h1 :class="s.hader__title">TestList</h1>
         <button :class="[c.basketButton, s.basketButton]" @click="showBasket = true">
-          <span v-if="basket.length" :class="c.basketButton__label">{{ basket.length }}</span>
+          <span v-if="basketIds.length" :class="c.basketButton__label">{{ basketIds.length }}</span>
         </button>
       </div>
     </header>
@@ -27,7 +27,7 @@
 </template>
 
 <script>
-import { mapState } from 'vuex'
+import { mapState, mapGetters } from 'vuex'
 import common from '../assets/css/main.scss?module'
 
 export default {
@@ -48,7 +48,8 @@ export default {
     }
   },
   computed: {
-    ...mapState(['catalog', 'products', 'basket']),
+    ...mapState(['catalog']),
+    ...mapGetters(['basketIds']),
     c() {
       return common
     }
@@ -137,6 +138,8 @@ export default {
 
   @media (max-width: 48.25rem) {
     justify-content: flex-start;
+    grid-row-start: 3;
+    grid-row-end: 4;
   }
 }
 

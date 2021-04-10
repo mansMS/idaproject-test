@@ -5,9 +5,7 @@
       :src="`${$axios.defaults.baseURL + product.photo}`"
       :alt="product.name"
       :class="s.product__image">
-    <button :class="[c.basketButton, s.product__basket, product.inBasket && s.product__basket_active]" @click="addProduct(product.id)">
-      <!-- <span v-if="basket.length" :class="c.basketButton__label" /> -->
-    </button>
+    <button :class="[c.basketButton, s.product__basket, product.inBasket && s.product__basket_active]" @click="addProduct(product)" />
     <div :class="s.product__text">
       <div :class="s.product__name">{{ product.name }}</div>
       <div :class="s.product__price">{{ priceFormatter(product.price) }}</div>
@@ -31,8 +29,8 @@ export default {
     }
   },
   methods: {
-    addProduct(id) {
-      this.$store.commit('addToBasket', id)
+    addProduct(product) {
+      this.$store.commit('addToBasket', product)
     },
     priceFormatter(value) {
       return new Intl.NumberFormat('ru-RU', {

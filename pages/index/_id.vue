@@ -1,15 +1,18 @@
 <template>
-  <div :class="s.productList">
-    <Card
-      v-for="product in sortingProducts"
-      :key="product.id"
-      :product="product"
-      @click="fetchProducts" />
+  <div>
+    <p v-if="!sortingProducts || !sortingProducts.length" :class="s.productsEmpty">Пусто. Поменяйте категорию или фильтры</p>
+    <div v-else :class="s.productList">
+      <Card
+        v-for="product in sortingProducts"
+        :key="product.id"
+        :product="product"
+        @click="fetchProducts" />
+    </div>
   </div>
 </template>
 
 <script>
-import { mapState } from 'vuex'
+import { mapState, mapGetters } from 'vuex'
 
 export default {
   beforeRouteUpdate(to, from, next) {
@@ -27,6 +30,7 @@ export default {
   },
   computed: {
     ...mapState(['basket']),
+    ...mapGetters(['basketIds']),
     sortingProducts() {
       const products =
         this.$store.state.products[this.$store.state.activeCatalog] || []
@@ -34,7 +38,7 @@ export default {
         .sort((a, b) => a[this.sorting] - b[this.sorting])
         .map(product => ({
           ...product,
-          inBasket: this.basket.includes(product.id)
+          inBasket: this.basketIds.includes(product.id)
         }))
     }
   },
@@ -65,6 +69,10 @@ export default {
 </script>
 
 <style lang="scss" module="s">
+.productsEmpty {
+  text-align: center;
+}
+
 .productList {
   display: grid;
   grid-template-columns: repeat(4, 1fr);

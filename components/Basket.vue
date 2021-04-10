@@ -30,8 +30,13 @@
             <p :class="s.formBlock__title">Оформить заказ</p>
             <form id="app" action="/" method="post" @submit="checkForm">
               <p><input id="name" v-model="name" type="text" name="name" placeholder="Ваше имя"></p>
-              <p><input id="phone" v-model="phone" type="text" name="phone" placeholder="Телефон"></p>
-              <p><input id="address" v-model="address" type="text" name="address" placeholder="Адрес"></p>
+              <p><input
+                id="phone"
+                v-model="phone"
+                type="text"
+                name="phone"
+                placeholder="Телефон"></p>
+              <p><input id="address" :valuev-model="address" type="text" name="address" placeholder="Адрес"></p>
               <input :class="[c.buttonMain, s.form__button]" type="submit" value="Отправить" :disabled="disableSubmit">
             </form>
           </div>
@@ -50,7 +55,7 @@ export default {
     return {
       disableSubmit: false,
       name: '',
-      phone: '',
+      phoneValue: '',
       address: ''
     }
   },
@@ -58,6 +63,14 @@ export default {
     ...mapState({ products: 'basket' }),
     c() {
       return common
+    },
+    phone: {
+      get() {
+        return this.phoneValue
+      },
+      set(newVal) {
+        this.phoneValue = this.formatPhone(newVal)
+      }
     }
   },
   methods: {
@@ -79,6 +92,15 @@ export default {
         this.disableSubmit = true
         e.preventDefault()
       }
+    },
+    formatPhone(e) {
+      const key = e.key
+      console.log('e', e)
+      console.log('key', key)
+      // if (!/^\d+/g.test(key)) {
+      //   e.preventDefault()
+      // }
+      return '+7 234 234-__-__'
     }
   }
 }
