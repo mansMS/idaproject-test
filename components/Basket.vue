@@ -39,7 +39,13 @@
             <p :class="s.formBlock__title">Оформить заказ</p>
             <form id="app" @submit.prevent="onSubmit" @input="formDisabled = false">
               <p><input id="name" v-model="name" type="text" name="name" placeholder="Ваше имя"></p>
-              <p><input id="phone" v-model="phone" type="text" name="phone" placeholder="Телефон"></p>
+              <p><input
+                id="phone"
+                ref="phone"
+                v-model="phone"
+                type="text"
+                name="phone"
+                placeholder="Телефон"></p>
               <p><input id="address" v-model="address" type="text" name="address" placeholder="Адрес"></p>
               <input :class="[c.buttonMain, s.form__button]" type="submit" value="Отправить" :disabled="formDisabled">
             </form>
@@ -79,6 +85,8 @@ export default {
         const formattedPhone = this.formatPhone(clearPhone)
         this.phoneValue = ''
         this.phoneValue = formattedPhone
+        const index = formattedPhone.indexOf('_')
+        this.$nextTick(() => { this.$refs.phone.setSelectionRange(index, index) })
       }
     }
   },

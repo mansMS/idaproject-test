@@ -21,7 +21,7 @@
     </main>
     <Basket v-show="showBasket" @close="showBasket = false" />
     <client-only>
-      <BasketChecker />
+      <LocalBasketChecker />
     </client-only>
   </div>
 </template>
