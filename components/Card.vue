@@ -87,13 +87,13 @@ export default {
   }
 
   &__name {
-    color: #59606d;
+    color: $grey;
     margin-bottom: 0.375rem;
   }
 
   &__price {
     font-weight: bold;
-    color: #1f1f1f;
+    color: $black;
   }
 }
 </style>

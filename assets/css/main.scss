@@ -15,7 +15,7 @@
 }
 
 .buttonMain:disabled {
-  background-color: #59606D;
+  background-color: $grey;
 }
 
 .basketButton {
@@ -38,7 +38,7 @@
   border-radius: 50%;
   font-size: 0.5rem;
   color: $white;
-  background-color: #959dad;
+  background-color: $bright-grey;
 }
 
 .buttonClose {

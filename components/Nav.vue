@@ -31,17 +31,17 @@ export default {
     text-decoration: none;
     outline: none;
     line-height: 1.3rem;
-    color: #959dad;
+    color: $bright-grey;
 
     &:hover,
     &:focus {
-      color: #59606d;
+      color: $grey;
     }
   }
 }
 
 .nuxtLinkActive {
   text-decoration-line: underline;
-  color: #1f1f1f;
+  color: $black;
 }
 </style>

@@ -48,7 +48,7 @@ input {
 a.nuxtLinkActive,
 a.nuxtLinkActive:hover {
   text-decoration-line: underline;
-  color: #1f1f1f;
+  color: $black;
 }
 
 .modal-enter,

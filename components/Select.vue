@@ -77,13 +77,13 @@ export default {
   &__selected {
     width: 8rem;
     padding-left: 0.375rem;
-    color: #59606d;
+    color: $grey;
     overflow: hidden;
     text-overflow: ellipsis;
   }
 
   &__itemList {
-    color: #959dad;
+    color: $bright-grey;
     border-radius: 0.5rem;
     background-color: $white;
     box-shadow: 0px 0.25rem 1rem rgba(0, 0, 0, 0.05);
@@ -103,7 +103,7 @@ export default {
     word-wrap: break-word;
 
     &:hover {
-      color: #1f1f1f;
+      color: $black;
       background-color: $dark-white;
     }
   }

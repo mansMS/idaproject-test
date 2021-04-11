@@ -2,9 +2,18 @@
   <transition name="modal">
     <div :class="s.modalMask">
       <div :class="s.basket">
-        <button :class="[c.buttonClose, s.basket__close]" @click="$emit('close')" />
-        <h2 :class="s.basket__title">Корзина</h2>
-        <div v-if="!products || !products.length" :class="s.empty">
+        <header :class="s.basket__header">
+          <h2 :class="s.basket__title">Корзина</h2>
+          <button :class="c.buttonClose" @click="close" />
+        </header>
+        <div v-if="formSubmitted" :class="s.submitted">
+          <img
+            src="@/assets/images/ok.svg"
+            :alt="'ok'">
+          <p :class="s.submitted__text">Заявка успешно отправлена</p>
+          <p :class="s.submitted__subText">Вскоре наш менеджер свяжется с Вами</p>
+        </div>
+        <div v-else-if="!products || !products.length" :class="s.empty">
           <p :class="s.empty__text">Пока что вы ничего не добавили в корзину.</p>
           <button :class="c.buttonMain" @click="$emit('close')">Перейти к выбору</button>
         </div>
@@ -28,16 +37,29 @@
           </div>
           <div :class="s.formBlock">
             <p :class="s.formBlock__title">Оформить заказ</p>
-            <form id="app" action="/" method="post" @submit="checkForm">
-              <p><input id="name" v-model="name" type="text" name="name" placeholder="Ваше имя"></p>
+            <form id="app" @submit.prevent="onSubmit" @input="formDisabled = false">
+              <p><input
+                id="name"
+                v-model="name"
+                type="text"
+                name="name"
+                required
+                placeholder="Ваше имя"></p>
               <p><input
                 id="phone"
                 v-model="phone"
                 type="text"
                 name="phone"
+                required
                 placeholder="Телефон"></p>
-              <p><input id="address" :valuev-model="address" type="text" name="address" placeholder="Адрес"></p>
-              <input :class="[c.buttonMain, s.form__button]" type="submit" value="Отправить" :disabled="disableSubmit">
+              <p><input
+                id="address"
+                v-model="address"
+                type="text"
+                name="address"
+                required
+                placeholder="Адрес"></p>
+              <input :class="[c.buttonMain, s.form__button]" type="submit" value="Отправить" :disabled="formDisabled">
             </form>
           </div>
         </div>
@@ -53,10 +75,12 @@ import common from '../assets/css/main.scss?module'
 export default {
   data() {
     return {
-      disableSubmit: false,
       name: '',
       phoneValue: '',
-      address: ''
+      address: '',
+      errors: { name: false, phone: false, address: false, form: false },
+      formDisabled: false,
+      formSubmitted: false
     }
   },
   computed: {
@@ -69,7 +93,10 @@ export default {
         return this.phoneValue
       },
       set(newVal) {
-        this.phoneValue = this.formatPhone(newVal)
+        const clearPhone = newVal.replace(/\D/g, '').slice(newVal.startsWith('+7') ? 1 : 0, 11)
+        const formattedPhone = this.formatPhone(clearPhone)
+        this.phoneValue = ''
+        this.phoneValue = formattedPhone
       }
     }
   },
@@ -84,23 +111,38 @@ export default {
         minimumFractionDigits: 0
       }).format(value)
     },
-    checkForm(e) {
-      if (this.name && this.phone && this.address) {
-        this.errdisableSubmitor = false
-        return true
-      } else {
-        this.disableSubmit = true
+    formatPhone(p) {
+      return `+7 ${p[0] || '_'}${p[1] || '_'}${p[2] || '_'} ${p[3] || '_'}${p[4] || '_'}${p[5] || '_'}-${p[6] || '_'}${p[7] || '_'}-${p[8] || '_'}${p[9] || '_'}`
+    },
+    async onSubmit(e) {
+      this.errors.name = !this.name
+      this.errors.phone = this.phone.length < 16
+      this.errors.address = !this.address
+      if (this.errors.name || this.errors.phone || this.errors.address) {
         e.preventDefault()
+        this.formDisabled = true
+        return false
+      } else {
+        try {
+          await fetch('https://jsonplaceholder.typicode.com/todos/1') // просто заглушка для await
+          this.formSubmitted = true
+          this.$store.commit('setBasket', [])
+        } catch {
+          this.errors.form = true
+        }
       }
     },
-    formatPhone(e) {
-      const key = e.key
-      console.log('e', e)
-      console.log('key', key)
-      // if (!/^\d+/g.test(key)) {
-      //   e.preventDefault()
-      // }
-      return '+7 234 234-__-__'
+    clear() {
+      this.name = ''
+      this.phoneValue = ''
+      this.address = ''
+      this.formSubmitted = false
+    },
+    close() {
+      if (this.formSubmitted) {
+        this.clear()
+      }
+      this.$emit('close')
     }
   }
 }
@@ -120,6 +162,8 @@ export default {
 }
 
 .basket {
+  display: flex;
+  flex-direction: column;
   box-sizing: border-box;
   height: 100%;
   max-width: 30rem;
@@ -127,13 +171,13 @@ export default {
   padding: 3.25rem 3rem;
   background-color: $white;
   border-radius: 0.5rem 0 0 0.5rem;
-  box-shadow: -0.25rem 0px 1rem rgba(0, 0, 0, 0.05);
+  box-shadow: -0.25rem 0 1rem rgba(0, 0, 0, 0.05);
   overflow: auto;
 
-  &__close {
-    position: relative;
-    float: right;
-    top: 0.5rem;
+  &__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
   }
 
   &__title {
@@ -155,7 +199,7 @@ export default {
     margin: 1rem 0;
     font-size: 1.125rem;
     line-height: 1.5rem;
-    color: #59606d;
+    color: $grey;
   }
 }
 
@@ -165,8 +209,8 @@ export default {
   align-items: center;
   margin: 0.5rem 0;
   padding: 1rem;
-  box-shadow: 0px 4px 16px rgba(0, 0, 0, 0.05);
-  border-radius: 8px;
+  box-shadow: 0 0.25rem 1rem rgba(0, 0, 0, 0.05);
+  border-radius: 0.5rem;
 
   &__image {
     width: 5.625rem;
@@ -184,13 +228,13 @@ export default {
   }
 
   &__name {
-    color: #59606d;
+    color: $grey;
     margin-bottom: 0.375rem;
   }
 
   &__price {
     font-weight: bold;
-    color: #1f1f1f;
+    color: $black;
   }
 }
 
@@ -199,7 +243,7 @@ export default {
     margin: 1rem 0;
     font-size: 1.125rem;
     line-height: 1.5rem;
-    color: #59606d;
+    color: $grey;
   }
 
   input:not([type="submit"]) {
@@ -208,9 +252,9 @@ export default {
     padding: 0.875rem;
     border: none;
     outline: none;
-    color: #1F1F1F;
+    color: $black;
     background-color: $dark-white;
-    border-radius: 8px;
+    border-radius: 0.5rem;
     font-size: 1rem;
     line-height: 1.3125;
   }
@@ -218,6 +262,27 @@ export default {
 
 .form__button {
   margin: 0.5rem 0;
+}
+
+.submitted {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  flex-grow: 1;
+  padding-bottom: 2.5rem;
+
+  &__text {
+    margin: 1.5rem 0 0.125rem;
+    font-size: 1.5rem;
+    line-height: 2rem;
+    font-weight: bold;
+  }
+
+  &__subText {
+    line-height: 1.3125;
+    color: $grey;
+  }
 }
 
 @media (max-width: 28.75rem) {
